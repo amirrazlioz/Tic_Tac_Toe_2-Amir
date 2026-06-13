@@ -4,16 +4,19 @@ from Human_Agent import Human_Agent
 from Random_Agent import Random_Agent
 from AI_Agent import AI_Agent
 
-PATH = 'Data/Q_MC_4.pth'
+PATH = 'Data/Q_Agent_As_O.pth'
 
 env = TicTacToe(State())
-player1 = AI_Agent(1, env, graphics=None, Q_table_PATH=None)
-player2 = Random_Agent(-1, env,graphics=None)
+#player1 = AI_Agent(1, env, graphics=None, Q_table_PATH=None)
+#player2 = Random_Agent(-1, env,graphics=None)
+
+player1 = Random_Agent(1, env, graphics=None) 
+player2 = AI_Agent(-1, env, graphics=None, Q_table_PATH=None) 
 
 gamma = 0.9
 
 def main ():
-    player = player1    
+    player = player2    
     
     '''
     השלימו את הקוד המאמן את הסוכן לפי אלגוריתם מנטו קרלו
@@ -23,7 +26,10 @@ def main ():
     '''
 
 
-    player.save_Q(PATH)
+    #player.save_Q(PATH)
+    #print(test(100))
+
+    player.save_Q(PATH)  
     print(test(100))
 
 def Generate_episode (player, epoch):
@@ -44,7 +50,7 @@ def test (num):
     x_win = 0
     o_win = 0
     tie = 0
-    player = player1
+    player = player2
     player.train=False
     player.load_Q(PATH)
     for n in range(num):

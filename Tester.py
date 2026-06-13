@@ -4,12 +4,17 @@ from Human_Agent import Human_Agent
 from Random_Agent import Random_Agent
 from AI_Agent import AI_Agent
 
-PATH = 'Data/Q_MC_3.pth'
+# נתיב לקובץ ה-Q החדש שאימנת עבור שחקן O
+PATH = 'Data/Q_Agent_As_O.pth'
 
 env = TicTacToe(State())
-# player1 = AI_Agent(1, env, graphics=None, Q_table_PATH=PATH, train=False)
-player1 = Random_Agent(1, env,graphics=None)
-player2 = Random_Agent(-1, env,graphics=None)
+
+# שחקן 1 (X) - נשאר אקראי, כדי לבדוק איך הבוט מתמודד מול שחקן אקראי
+player1 = Random_Agent(1, env, graphics=None)
+
+# שחקן 2 (O) - הסוכן החכם שלנו! (train=False דואג שהוא ישחק הכי חכם שהוא יכול)
+player2 = AI_Agent(-1, env, graphics=None, Q_table_PATH=PATH, train=False)
+
 num = 1000
 
 def main ():
@@ -20,21 +25,28 @@ def main ():
         
     for n in range(num):
         state = State()
-        player = player1
+        player = player1 # המשחק תמיד מתחיל משחקן 1 (האקראי)
+        
         while not env.end_of_game(state):
             action = player.get_action(state=state)
-            state, _ = env.next_state(state,action)
+            state, _ = env.next_state(state, action)
             player = switch_players(player)
+            
         if state.end_of_game == 1:
-            x_win +=1
+            x_win += 1       # ניצחון של השחקן האקראי (X)
         elif state.end_of_game == -1:
-            o_win += 1
+            o_win += 1       # ניצחון של הסוכן החכם שלך (O)
         else:
-            tie +=1
+            tie += 1         # תיקו
+            
         state.reset()    
         print(n, end = "\r")
+        
     print()
-    print(x_win, o_win, tie) 
+    print(f"Tester results after {num} games:")
+    print(f"X wins (Random): {x_win}")
+    print(f"O wins (Smart Agent): {o_win}")
+    print(f"Games ended in a tie: {tie}")
 
 def switch_players(player):
     if player == player1:
